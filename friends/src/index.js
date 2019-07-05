@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
+import "normalize.css";
 import "bulma/css/bulma.css";
 
 import App from "./App";

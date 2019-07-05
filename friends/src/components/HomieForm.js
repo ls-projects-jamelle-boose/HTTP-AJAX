@@ -13,7 +13,7 @@ function HomieForm() {
       </div>
 
       <div className="field">
-        <label className="label">Username</label>
+        <label className="label">Age</label>
         <div className="control has-icons-left has-icons-right">
           <input
             className="input is-success"
@@ -28,7 +28,6 @@ function HomieForm() {
             <i className="fas fa-check" />
           </span>
         </div>
-        <p className="help is-success">This username is available</p>
       </div>
 
       <div className="field">
@@ -47,50 +46,7 @@ function HomieForm() {
             <i className="fas fa-exclamation-triangle" />
           </span>
         </div>
-        <p className="help is-danger">This email is invalid</p>
       </div>
-
-      <div className="field">
-        <label className="label">Subject</label>
-        <div className="control">
-          <div className="select">
-            <select>
-              <option>Select dropdown</option>
-              <option>With options</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div className="field">
-        <label className="label">Message</label>
-        <div className="control">
-          <textarea className="textarea" placeholder="Textarea" />
-        </div>
-      </div>
-
-      <div className="field">
-        <div className="control">
-          <label className="checkbox">
-            <input type="checkbox" />I agree to the{" "}
-            <a href={`#`}>terms and conditions</a>
-          </label>
-        </div>
-      </div>
-
-      <div className="field">
-        <div className="control">
-          <label className="radio">
-            <input type="radio" name="question" />
-            Yes
-          </label>
-          <label className="radio">
-            <input type="radio" name="question" />
-            No
-          </label>
-        </div>
-      </div>
-
       <div className="field is-grouped">
         <div className="control">
           <button className="button is-link">Submit</button>
