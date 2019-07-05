@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 
-import "./App.css";
+import HomieForm from "./components/HomieForm";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -28,6 +28,7 @@ export default class App extends React.Component {
         {this.state.friends.map(homie => (
           <HomieDetails key={homie.id} homie={homie} />
         ))}
+        <HomieForm />
       </div>
     );
   }
@@ -37,13 +38,9 @@ function HomieDetails({ homie }) {
   const { name, age, email } = homie;
   return (
     <div>
-      <h2>{name}</h2>
-      <div>
-        Age: <em>{age}</em>
-      </div>
-      <div>
-        Email: <em>{email}</em>
-      </div>
+      <div>Name: {name}</div>
+      <div>Age: {age}</div>
+      <div>Email: {email}</div>
     </div>
   );
 }
