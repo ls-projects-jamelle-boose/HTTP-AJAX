@@ -1,9 +1,9 @@
-import React from "react";
+import React, { Component } from "react";
 import axios from "axios";
 
-import HomieForm from "./components/HomieForm";
+import FriendForm from "./components/FriendForm";
 
-export default class App extends React.Component {
+export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -22,20 +22,29 @@ export default class App extends React.Component {
       });
   }
 
+  addFriend = friend => {
+    axios
+      .post("http://localhost:5000/friends")
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => console.error(error));
+  };
+
   render() {
     return (
       <div>
-        {this.state.friends.map(homie => (
-          <HomieDetails key={homie.id} homie={homie} />
+        {this.state.friends.map(friend => (
+          <FriendDetails key={friend.id} friend={friend} />
         ))}
-        <HomieForm />
+        <FriendForm />
       </div>
     );
   }
 }
 
-function HomieDetails({ homie }) {
-  const { name, age, email } = homie;
+function FriendDetails({ friend }) {
+  const { name, age, email } = friend;
   return (
     <div>
       <div>Name: {name}</div>
