@@ -30,7 +30,7 @@ export default class FriendForm extends Component {
     let friend = this.state.newFriend;
     event.preventDefault();
     axios
-      .post("http://localhost:5000/friends", friend)
+      .post(`http://localhost:5000/friends`, friend)
       .then(response =>
         this.setState({
           friends: response.data
@@ -44,11 +44,17 @@ export default class FriendForm extends Component {
         email: ""
       }
     });
+    // window.location.reload();
   };
 
-  // submitHandler = event => {
-  //   event.preventDefault();
-  // };
+  deleteFriend = (event, id) => {
+    event.preventDefault();
+    axios.delete(`http://localhost:5000/friends/${id}`).then(response =>
+      this.setState({
+        friends: response.data
+      })
+    );
+  };
 
   render() {
     return (
