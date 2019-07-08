@@ -2,14 +2,53 @@
 // 1.  Add a button to save the new friend by making a`POST` request to the same endpoint listed above.
 
 import React, { Component } from "react";
+import axios from "axios";
 
 export default class FriendForm extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      friends: [],
+      newFriend: {
+        name: "",
+        age: "",
+        email: ""
+      }
+    };
   }
 
-  changeHandler = event;
+  changeHandler = event => {
+    this.setState({
+      newFriend: {
+        ...this.state.newFriend,
+        [event.target.name]: event.target.value
+      }
+    });
+  };
+
+  addFriend = event => {
+    let friend = this.state.newFriend;
+    event.preventDefault();
+    axios
+      .post("http://localhost:5000/friends", friend)
+      .then(response =>
+        this.setState({
+          friends: response.data
+        })
+      )
+      .catch(error => console.error(error));
+    this.setState({
+      newFriend: {
+        name: "",
+        age: "",
+        email: ""
+      }
+    });
+  };
+
+  // submitHandler = event => {
+  //   event.preventDefault();
+  // };
 
   render() {
     return (
@@ -23,6 +62,7 @@ export default class FriendForm extends Component {
               type="string"
               placeholder="Name"
               onChange={this.changeHandler}
+              value={this.state.newFriend.name}
             />
           </div>
         </div>
@@ -35,6 +75,7 @@ export default class FriendForm extends Component {
               type="number"
               placeholder="Age"
               onChange={this.changeHandler}
+              value={this.state.newFriend.age}
             />
             <span className="icon is-small is-left">
               <i className="fas fa-user" />
@@ -50,6 +91,7 @@ export default class FriendForm extends Component {
               type="string"
               placeholder="Email"
               onChange={this.changeHandler}
+              value={this.state.newFriend.email}
             />
             <span className="icon is-small is-left">
               <i className="fas fa-envelope" />
@@ -61,7 +103,7 @@ export default class FriendForm extends Component {
             <button
               className="button is-link"
               type="submit"
-              onClick={this.onClick}>
+              onClick={this.addFriend}>
               Submit
             </button>
           </div>

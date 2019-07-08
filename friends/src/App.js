@@ -22,15 +22,6 @@ export default class App extends Component {
       });
   }
 
-  addFriend = friend => {
-    axios
-      .post("http://localhost:5000/friends")
-      .then(response => {
-        console.log(response);
-      })
-      .catch(error => console.error(error));
-  };
-
   render() {
     return (
       <div>
