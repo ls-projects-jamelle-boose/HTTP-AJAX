@@ -1,125 +1,106 @@
-// 1.  Add a form to gather information about a new friend
-// 1.  Add a button to save the new friend by making a`POST` request to the same endpoint listed above.
-
 import React, { Component } from "react";
-import axios from "axios";
+import { Redirect } from "react-router-dom";
+import ReactTimeout from "react-timeout";
 
-export default class FriendForm extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      friends: [],
-      newFriend: {
-        name: "",
-        age: "",
-        email: ""
-      }
+class FriendForm extends Component {
+  state = {
+    editing: false,
+    friend: this.props.toUpdate || {
+      name: "",
+      age: "",
+      email: ""
+    },
+    redirect: false,
+    updated: false
+  };
+
+  addFriend = () => {
+    this.props.addFriend(this.props.endpoint, {
+      ...this.state.friend
+    });
+  };
+
+  updateFriend = () => {
+    const url = `${this.props.endpoint}/${this.props.match.params.id}`;
+
+    this.props.updateFriend(url, {
+      ...this.state.friend
+    });
+
+    this.setState({ updated: true });
+  };
+
+  handleChange = e => {
+    const friend = {
+      ...this.state.friend,
+      [e.target.name]: e.target.value
     };
-  }
 
-  changeHandler = event => {
-    this.setState({
-      newFriend: {
-        ...this.state.newFriend,
-        [event.target.name]: event.target.value
-      }
-    });
+    this.setState({ friend });
   };
 
-  addFriend = event => {
-    let friend = this.state.newFriend;
-    event.preventDefault();
-    axios
-      .post(`http://localhost:5000/friends`, friend)
-      .then(response =>
-        this.setState({
-          friends: response.data
-        })
-      )
-      .catch(error => console.error(error));
+  handleSubmit = e => {
+    e.preventDefault();
+
+    const { name, age, email } = this.state.friend;
+
+    if (!name || !age || !email) return;
+
+    if (this.state.editing) this.updateFriend();
+    else this.addFriend();
+
     this.setState({
-      newFriend: {
+      friend: {
         name: "",
         age: "",
         email: ""
       }
     });
-    // window.location.reload();
-  };
 
-  deleteFriend = (event, id) => {
-    event.preventDefault();
-    axios.delete(`http://localhost:5000/friends/${id}`).then(response =>
-      this.setState({
-        friends: response.data
-      })
+    this.props.setTimeout(
+      () => this.setState({ redirect: !this.state.redirect }),
+      1000
     );
   };
 
+  componentDidMount() {
+    if (this.props.toUpdate) this.setState({ editing: !this.state.editing });
+  }
+
   render() {
+    if (this.state.redirect) return <Redirect to="/" />;
+
     return (
-      <div className="App">
-        <div className="field">
-          <label className="label">Name</label>
-          <div className="control">
-            <input
-              className="input"
-              name="name"
-              type="string"
-              placeholder="Name"
-              onChange={this.changeHandler}
-              value={this.state.newFriend.name}
-            />
-          </div>
-        </div>
-        <div className="field">
-          <label className="label">Age</label>
-          <div className="control has-icons-left has-icons-right">
-            <input
-              className="input is-success"
-              name="age"
-              type="number"
-              placeholder="Age"
-              onChange={this.changeHandler}
-              value={this.state.newFriend.age}
-            />
-            <span className="icon is-small is-left">
-              <i className="fas fa-user" />
-            </span>
-          </div>
-        </div>
-        <div className="field">
-          <label className="label">Email</label>
-          <div className="control has-icons-left has-icons-right">
-            <input
-              className="input is-danger"
-              name="email"
-              type="string"
-              placeholder="Email"
-              onChange={this.changeHandler}
-              value={this.state.newFriend.email}
-            />
-            <span className="icon is-small is-left">
-              <i className="fas fa-envelope" />
-            </span>
-          </div>
-        </div>
-        <div className="field is-grouped">
-          <div className="control">
-            <button
-              className="button is-link"
-              type="submit"
-              onClick={this.addFriend}>
-              Submit
-            </button>
-          </div>
-          <div className="control">
-            <button className="button is-text" onClick={this.onClick}>
-              Cancel
-            </button>
-          </div>
-        </div>
-      </div>
+      <form className="friend-form" onSubmit={this.handleSubmit}>
+        <input
+          className="fname"
+          name="name"
+          onChange={this.handleChange}
+          placeholder="Name"
+          type="text"
+          value={this.state.friend.name}
+        />
+        <input
+          className="fage"
+          name="age"
+          onChange={this.handleChange}
+          placeholder="Age"
+          type="number"
+          value={this.state.friend.age}
+        />
+        <input
+          className="femail"
+          name="email"
+          onChange={this.handleChange}
+          placeholder="Email"
+          type="email"
+          value={this.state.friend.email}
+        />
+        <button type="submit">{this.state.editing ? "UPDATE" : "ADD"}</button>
+        {this.state.updated && <p>information updated</p>}
+      </form>
     );
   }
 }
+
+export default ReactTimeout(FriendForm);
